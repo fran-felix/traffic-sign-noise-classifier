@@ -18,33 +18,42 @@ DESVIO = (0.5, 0.5, 0.5)
 
 
 def transform_avaliacao():
-    """Pré-processamento aplicado na validação, no dev e no teste."""
-    return transforms.Compose([
-        transforms.Resize((TAMANHO, TAMANHO)),
-        transforms.ToTensor(),
-        transforms.Normalize(MEDIA, DESVIO),
-    ])
+  """Pré-processamento aplicado na validação, no dev e no teste."""
+  return transforms.Compose([
+    transforms.Resize((TAMANHO, TAMANHO)),
+    transforms.ToTensor(),
+    transforms.Normalize(MEDIA, DESVIO),
+  ])
 
 
 def transform_treino():
-    """Pré-processamento do treino. Aqui é o lugar do data augmentation."""
-    return transform_avaliacao()
+  """Pré-processamento do treino. Aqui é o lugar do data augmentation."""
 
+  #TODO data augmentation
+
+  return transform_avaliacao()
+
+class TrafficNoiseNet(nn.Module):
+  def __init__(self):
+    super().__init__()
+
+  def forward(self, x):
+    ...
 
 def bloco(entrada, saida):
-    return nn.Sequential(
-        nn.Conv2d(entrada, saida, 3, padding=1), nn.ReLU(),
-        nn.Conv2d(saida, saida, 3, padding=1), nn.ReLU(),
-        nn.MaxPool2d(2),
-    )
+  return nn.Sequential(
+    nn.Conv2d(entrada, saida, 3, padding=1), nn.ReLU(),
+    nn.Conv2d(saida, saida, 3, padding=1), nn.ReLU(),
+    nn.MaxPool2d(2),
+  )
 
 
 def criar_modelo():
-    return nn.Sequential(
-        bloco(3, 32),    # 32 -> 16
-        bloco(32, 64),   # 16 -> 8
-        bloco(64, 128),  # 8 -> 4
-        nn.Flatten(),
-        nn.Linear(128 * 4 * 4, 256), nn.ReLU(),
-        nn.Linear(256, N_CLASSES),
-    )
+  return nn.Sequential(
+    bloco(3, 32),    # 32 -> 16
+    bloco(32, 64),   # 16 -> 8
+    bloco(64, 128),  # 8 -> 4
+    nn.Flatten(),
+    nn.Linear(128 * 4 * 4, 256), nn.ReLU(),
+    nn.Linear(256, N_CLASSES),
+  )
