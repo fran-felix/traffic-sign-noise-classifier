@@ -5,11 +5,11 @@
 """
 
 import csv
-from collections import defaultdict
-from pathlib import Path
-
 import numpy as np
 import torchvision
+
+from collections import defaultdict
+from pathlib import Path
 from PIL import Image
 from torch.utils.data import Dataset
 
