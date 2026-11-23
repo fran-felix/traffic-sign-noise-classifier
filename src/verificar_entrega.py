@@ -1,4 +1,5 @@
-"""Verifica o formato do arquivo de predições e da pasta de entrega.
+"""
+Verifica o formato do arquivo de predições e da pasta de entrega.
 
 Uso (na raiz do material):
   python src/verificar_entrega.py NOME_SOBRENOME_RESULTS.txt --pasta teste
