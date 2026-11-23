@@ -1,0 +1,21 @@
+name: tpi
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - numpy
+  - scipy
+  - matplotlib
+  - tqdm
+  - ipykernel
+  - jupyterlab
+  - pip
+  - pip:
+      # wheels CUDA 12.1: funcionam com driver NVIDIA >= 530 e também em CPU
+      - --extra-index-url https://download.pytorch.org/whl/cu121
+      - torch==2.5.1
+      - torchvision==0.20.1
+      - opencv-python<5
+      - scikit-image
+variables:
+  PYTHONNOUSERSITE: "1"
