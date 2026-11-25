@@ -29,8 +29,8 @@ def transform_avaliacao():
   return transforms.Compose([
     transforms.Resize((TAMANHO, TAMANHO)),
     transforms.ToTensor(),
-    transforms.Normalize(MEDIA, DESVIO),
-    #transforms.Normalize(MEDIA_IMGNET, DESVIO_IMGNET),
+    #transforms.Normalize(MEDIA, DESVIO),
+    transforms.Normalize(MEDIA_IMGNET, DESVIO_IMGNET),
   ])
 
 def degradar(image):
@@ -94,16 +94,16 @@ def bloco(entrada, saida):
 
 
 def criar_modelo():
-  #return TrafficNoiseNet()
+  return TrafficNoiseNet()
   
-  return nn.Sequential(
+  '''return nn.Sequential(
     bloco(3, 32),    # 32 -> 16
     bloco(32, 64),   # 16 -> 8
     bloco(64, 128),  # 8 -> 4
     nn.Flatten(),
     nn.Linear(128 * 4 * 4, 256), nn.ReLU(),
     nn.Linear(256, N_CLASSES),
-  )
+  )'''
 
 
 def main() -> None:
@@ -112,6 +112,3 @@ def main() -> None:
 
 if __name__ == "__main__":
   main()
-
-
-# Ficou pior só tuchar a resnet. Acho que é pq ela tá ficando 512x1x1, ver isso depois pra ficar 8x8 pra eu poder ter informação espacial e zas e zas. Backbone menor
