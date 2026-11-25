@@ -94,16 +94,16 @@ def bloco(entrada, saida):
 
 
 def criar_modelo():
-  return TrafficNoiseNet()
+  #return TrafficNoiseNet()
   
-  '''return nn.Sequential(
+  return nn.Sequential(
     bloco(3, 32),    # 32 -> 16
     bloco(32, 64),   # 16 -> 8
     bloco(64, 128),  # 8 -> 4
     nn.Flatten(),
     nn.Linear(128 * 4 * 4, 256), nn.ReLU(),
     nn.Linear(256, N_CLASSES),
-  )'''
+  )
 
 
 def main() -> None:
