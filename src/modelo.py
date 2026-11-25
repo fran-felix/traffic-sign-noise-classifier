@@ -7,11 +7,13 @@ mudarem a arquitetura ou o pré-processamento, mantenham esses dois nomes (ou
 adaptem o predizer.py).
 """
 
+import numpy as np
 import torch.nn as nn
 import torchvision
 from torchvision import transforms
 
 from dados import N_CLASSES
+from noise import NOISE, rng
 
 TAMANHO = 32
 MEDIA = (0.5, 0.5, 0.5)
@@ -22,22 +24,27 @@ pesos_imagenet = torchvision.models.ResNet18_Weights.DEFAULT
 MEDIA_IMGNET = (0.485, 0.456, 0.406)   # normalização da ImageNet
 DESVIO_IMGNET = (0.229, 0.224, 0.225)
 
-
 def transform_avaliacao():
   """Pré-processamento aplicado na validação, no dev e no teste."""
   return transforms.Compose([
     transforms.Resize((TAMANHO, TAMANHO)),
     transforms.ToTensor(),
-    transforms.Normalize(MEDIA_IMGNET, DESVIO_IMGNET),
+    transforms.Normalize(MEDIA, DESVIO),
+    #transforms.Normalize(MEDIA_IMGNET, DESVIO_IMGNET),
   ])
 
+def degradar(image):
+  degradacoes = list(NOISE.values())
+  sorteadas = rng.choice(len(degradacoes), size=3, replace=False)
+
+  for idx in sorteadas:
+    image = degradacoes[int(idx)](image)
+
+  return image
 
 def transform_treino():
   """Pré-processamento do treino. Aqui é o lugar do data augmentation."""
-
-  #TODO data augmentation
-
-  return transform_avaliacao()
+  return transforms.Compose([degradar, transform_avaliacao()])
 
 class TrafficHead(nn.Module):
   def __init__(self):
@@ -87,16 +94,16 @@ def bloco(entrada, saida):
 
 
 def criar_modelo():
-  return TrafficNoiseNet()
+  #return TrafficNoiseNet()
   
-  """return nn.Sequential(
+  return nn.Sequential(
     bloco(3, 32),    # 32 -> 16
     bloco(32, 64),   # 16 -> 8
     bloco(64, 128),  # 8 -> 4
     nn.Flatten(),
     nn.Linear(128 * 4 * 4, 256), nn.ReLU(),
     nn.Linear(256, N_CLASSES),
-  )"""
+  )
 
 
 def main() -> None:
@@ -107,4 +114,4 @@ if __name__ == "__main__":
   main()
 
 
-Ficou pior só tuchar a resnet. Acho que é pq ela tá ficando 512x1x1, ver isso depois pra ficar 8x8 pra eu poder ter informação espacial e zas e zas. Backbone menor
+# Ficou pior só tuchar a resnet. Acho que é pq ela tá ficando 512x1x1, ver isso depois pra ficar 8x8 pra eu poder ter informação espacial e zas e zas. Backbone menor
